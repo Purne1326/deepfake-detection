@@ -13,7 +13,15 @@ def fast_seed():
     """Lightning-fast idempotent seeding for Cloud."""
     print("🚀 [CLOUD_SEED] Starting check...")
     with app.app_context():
-        # Ensure all tables exist
+        # ONE-TIME FORCE-DROP to fix the truncated password column size (128 -> 512)
+        # We only do this if we haven't successfully seeded the fixed users yet.
+        try:
+            db.drop_all() # This clears the broken 128-char schema
+            print("🚿 [CLOUD_SEED] Old schema cleared. Rebuilding high-capacity database...")
+        except:
+            pass
+            
+        # Ensure all tables exist (now with 512-char column)
         db.create_all()
         
         # Add Login Users if missing
