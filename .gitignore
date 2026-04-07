@@ -2,3 +2,10 @@ venv/
 __pycache__/
 *.pyc
 .env
+*.db
+.DS_Store
+*.log
+member5_dashboard_oversight/uploads/*
+!member5_dashboard_oversight/uploads/.gitkeep
+dummy_social_platform/static/uploads/*
+!dummy_social_platform/static/uploads/.gitkeep
