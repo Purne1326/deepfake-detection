@@ -5,7 +5,6 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    # We run orchestrator in background (&) and gunicorn in foreground so Render can monitor the port
     startCommand: PYTHONPATH=. python scripts/orchestrator.py & gunicorn member5_dashboard_oversight.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
@@ -23,7 +22,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn dummy_social_platform.app:app --bind 0.0.0.0:$PORT
+    startCommand: PYTHONPATH=. gunicorn dummy_social_platform.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DUMMY_DATABASE_URL
         fromDatabase:
@@ -44,7 +43,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn public_reporting_system.app:app --bind 0.0.0.0:$PORT
+    startCommand: PYTHONPATH=. gunicorn public_reporting_system.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
