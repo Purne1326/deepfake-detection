@@ -1,36 +1,59 @@
 services:
-  # 1. Deepfake Dashboard Oversight (Free Version)
+  # 1. Deepfake Dashboard Oversight (Combined with Orchestrator to stay on Free Tier)
   - type: web
-    name: deep-dash-purnendu
+    name: deepfake-dashboard
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn member5_dashboard_oversight.app:app
+    startCommand: gunicorn member5_dashboard_oversight.app:app & python scripts/orchestrator.py
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.10.12
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.12
 
-  # 2. Dummy Social Platform (Free Version)
+  # 2. Dummy Social Platform
   - type: web
-    name: social-purnendu
+    name: dummy-social-platform
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn dummy_social_platform.app:app
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.10.12
+      - key: DUMMY_DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.12
 
-  # 3. Public Reporting System (Free Version)
+  # 3. Public Reporting System
   - type: web
-    name: reporting-purnendu
+    name: public-reporting-system
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn public_reporting_system.app:app
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.10.12
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.12
+
+databases:
+  - name: deepfake-db
+    plan: free
