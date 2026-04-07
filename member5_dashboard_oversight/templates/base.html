@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Oversight v2.4</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!-- ApexCharts for Premium Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        /* Consolidated Global Styles */
+        .switch-item {
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .switch-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-light-blue);
+        }
+
+        .switch-item span {
+            font-size: 9px;
+            opacity: 0.6;
+            background: var(--border-color);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .pipeline-pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            animation: pulse-pipeline 2s infinite;
+        }
+
+        @keyframes pulse-pipeline {
+            0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { transform: scale(1.2); opacity: 0.5; box-shadow: 0 0 0 6px rgba(59, 130, 246, 0); }
+            100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        @keyframes toastIn {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Particle Dynamics */
+        .particle {
+            top: var(--top);
+            left: var(--left);
+            animation-delay: var(--delay);
+            opacity: var(--opacity);
+        }
+    </style>
+</head>
+
+<body class="theme-dark">
+    <div class="particles">
+        <!-- Generative Particles via CSS Variables to satisfy Linters -->
+        {% for i in range(25) %}
+        <div class="particle" 
+             style="--top: {{ range(1, 100)|random }}%; --left: {{ range(1, 100)|random }}%; --delay: {{ (range(1, 10)|random) / 10 }}s; --opacity: {{ (range(1, 4)|random) / 10 }};">
+        </div>
+        {% endfor %}
+    </div>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <div class="brand-area">
+                <div class="brand-icon">🛡️</div>
+                <div class="brand-text">
+                    <h2>DEEPFAKE</h2>
+                    <span>OVERSIGHT v2.4</span>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a href="{{ url_for('dashboard.index') }}" class="nav-item {% block nav_dashboard %}{% endblock %}">
+                    <span style="font-size:18px">⊞</span> Dashboard
+                </a>
+                <a href="{{ url_for('dashboard.cases') }}" class="nav-item {% block nav_cases %}{% endblock %}">
+                    <span style="font-size:18px">📁</span> Cases List
+                </a>
+                <a href="{{ url_for('dashboard.access') }}" class="nav-item {% block nav_access %}{% endblock %}">
+                    <span style="font-size:18px">🔐</span> Access Management
+                </a>
+                <a href="{{ url_for('dashboard.alerts') }}" class="nav-item {% block nav_alerts %}{% endblock %}">
+                    <span style="font-size:18px">🔔</span> Alerts
+                </a>
+                <a href="{{ url_for('dashboard.audit') }}" class="nav-item {% block nav_audit %}{% endblock %}">
+                    <span style="font-size:18px">🕒</span> Audit Trail
+                </a>
+                <a href="{{ url_for('dashboard.reports') }}" class="nav-item {% block nav_reports %}{% endblock %}">
+                    <span style="font-size:18px">📊</span> Reports
+                </a>
+                <a href="{{ url_for('dashboard.forensic_scan') }}" class="nav-item {% block nav_forensic %}{% endblock %}">
+                    <span style="font-size:18px">🛡️</span> Forensic Scan
+                </a>
+            </div>
+            <div class="user-profile" style="position: relative;">
+                <img id="current-avatar"
+                    src="https://ui-avatars.com/api/?name=Purnendu+Pal&background=2563eb&color=fff&bold=true"
+                    style="width:36px;height:36px;border-radius:50%;">
+                <div style="flex:1;">
+                    <h4 id="current-username">Purnendu Pal</h4>
+                    <span id="current-role" style="font-size:10px;color:var(--text-muted);">Lead Security Architect</span>
+                </div>
+                <span id="settings-trigger"
+                    style="margin-left: auto; color: var(--text-muted); cursor:pointer; font-size: 18px; transition: transform 0.3s ease;">⚙️</span>
+
+                <!-- Account Switcher Dropdown -->
+                <div id="account-switcher"
+                    style="display:none; position: absolute; bottom: 100%; left: 0; width: 220px; background: rgba(30,35,45,0.95); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; margin-bottom: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1000;">
+                    <p
+                        style="font-size: 10px; color: var(--text-muted); margin: 0 0 8px 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Switch Profile</p>
+
+                    <div class="switch-item" onclick="switchUser('Purnendu Pal', 'Lead Security Architect', '2563eb')">
+                        Purnendu Pal <span>Admin</span></div>
+                    <div class="switch-item" onclick="switchUser('Himaghna Dhar', 'Senior Forensic Analyst', '10b981')">
+                        Himaghna Dhar <span>Forensic</span></div>
+                    <div class="switch-item" onclick="switchUser('Anushrita Dey', 'Compliance & Privacy Officer', 'f59e0b')">
+                        Anushrita Dey <span>Legal</span></div>
+                    <div class="switch-item" onclick="switchUser('Srija Majumdar', 'Content Moderation Lead', '8b5cf6')">
+                        Srija Majumdar <span>Moderator</span></div>
+                    <div class="switch-item" onclick="switchUser('Rishab Ganguly', 'Detection Pipeline Engineer', 'ec4899')">
+                        Rishab Ganguly <span>Dev</span></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="top-header">
+                <div class="search-bar">
+                    🔍 <input type="text" placeholder="Search system logs, cases, or alerts...">
+                </div>
+                <div class="header-actions">
+                    <div
+                        style="display:flex; align-items:center; gap: 8px; margin-right: 12px; padding: 4px 12px; background: rgba(255,255,255,0.03); border-radius: 6px; border: 1px solid var(--border-color);">
+                        <span class="pipeline-pulse"></span>
+                        <span
+                            style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Pipeline
+                            Live</span>
+                    </div>
+                    <span style="cursor:pointer;">✉️</span>
+                    <span style="cursor:pointer;">❓</span>
+                    {% block header_threat %}
+                    {% if threat_level == 'CRITICAL' %}
+                    <div class="threat-badge"
+                        style="background: rgba(239, 68, 68, 0.1); border-color: var(--accent-red); color: var(--accent-red); animation: pulse-glow 1s infinite alternate;">
+                        <span
+                            style="width:8px;height:8px;background:var(--accent-red);border-radius:50%;box-shadow: 0 0 10px var(--accent-red);"></span>
+                        THREAT: CRITICAL
+                    </div>
+                    {% elif threat_level == 'ELEVATED' %}
+                    <div class="threat-badge"
+                        style="background: rgba(245, 158, 11, 0.1); border-color: var(--accent-orange); color: var(--accent-orange);">
+                        <span
+                            style="width:8px;height:8px;background:var(--accent-orange);border-radius:50%;box-shadow: 0 0 10px var(--accent-orange);"></span>
+                        LEVEL: ELEVATED
+                    </div>
+                    {% else %}
+                    <div class="threat-badge"
+                        style="background: rgba(16, 185, 129, 0.1); border-color: var(--accent-green); color: var(--accent-green);">
+                        <span
+                            style="width:8px;height:8px;background:var(--accent-green);border-radius:50%;box-shadow: 0 0 10px var(--accent-green);"></span>
+                        SYSTEM NORMAL
+                    </div>
+                    {% endif %}
+                    {% endblock %}
+                </div>
+            </header>
+
+            <div class="content-body">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toasts Container -->
+    <div id="toast-container"
+        style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; pointer-events: none;">
+    </div>
+
+    <!-- Scripts organized at the bottom -->
+    <script>
+        const trigger = document.getElementById('settings-trigger');
+        const switcher = document.getElementById('account-switcher');
+
+        trigger.onclick = (e) => {
+            e.stopPropagation();
+            switcher.style.display = switcher.style.display === 'none' ? 'block' : 'none';
+            trigger.style.transform = switcher.style.display === 'block' ? 'rotate(90deg)' : 'rotate(0deg)';
+        };
+
+        document.onclick = () => { switcher.style.display = 'none'; trigger.style.transform = 'rotate(0deg)'; };
+
+        function switchUser(name, role, color) {
+            document.getElementById('current-username').innerText = name;
+            document.getElementById('current-role').innerText = role;
+            document.getElementById('current-avatar').src = `https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=${color}&color=fff&bold=true`;
+            localStorage.setItem('active_user', JSON.stringify({ name, role, color }));
+            switcher.style.display = 'none';
+            trigger.style.transform = 'rotate(0deg)';
+        }
+
+        window.onload = () => {
+            const saved = localStorage.getItem('active_user');
+            if (saved) {
+                const user = JSON.parse(saved);
+                switchUser(user.name, user.role, user.color);
+            }
+        };
+
+        let lastLogTimestamp = null;
+        async function checkNewAlerts() {
+            try {
+                const response = await fetch('/api/v1/latest-audit');
+                if (!response.ok) return;
+                const data = await response.json();
+                if (data && data.timestamp !== lastLogTimestamp) {
+                    if (lastLogTimestamp !== null) showToast(data.reason, data.status);
+                    lastLogTimestamp = data.timestamp;
+                }
+            } catch (e) { }
+        }
+
+        function showToast(message, status) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `background:#1e293b; border-left:4px solid ${status === 'CRITICAL' || status === 'PENDING_REVIEW' ? '#ef4444' : '#3b82f6'}; color:white; padding:16px 20px; border-radius:8px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.4); font-size:13px; min-width:280px; display:flex; align-items:center; justify-content:space-between; animation:toastIn 0.3s ease-out; pointer-events:auto;`;
+            toast.innerHTML = `<div><div style="font-size:10px; color:#94a3b8; font-weight:bold; margin-bottom:4px;">SYSTEM ALERT</div><div style="max-width:240px; word-break:break-word;">${message}</div></div><span onclick="this.parentElement.remove()" style="margin-left: 12px; color: #94a3b8; cursor:pointer;">✕</span>`;
+            document.getElementById('toast-container').appendChild(toast);
+            setTimeout(() => { if (toast.parentElement) toast.remove(); }, 8000);
+        }
+        setInterval(checkNewAlerts, 4000);
+    </script>
+</body>
+
+</html>

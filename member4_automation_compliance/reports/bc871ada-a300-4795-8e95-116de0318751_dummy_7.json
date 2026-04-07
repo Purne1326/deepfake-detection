@@ -1,0 +1,22 @@
+{
+    "case_id": "bc871ada-a300-4795-8e95-116de0318751",
+    "timestamp": "2026-04-05T05:31:20.005093",
+    "platform": "dummy",
+    "post_id": 7,
+    "post_url": "/static/uploads/demo_7.jpg",
+    "victim_user_id": "tanvi_v",
+    "match_confidence": 0.98,
+    "analysis": {
+        "risk_level": "low",
+        "deepfake_score": 0.1,
+        "deepfake_confidence": 0.94,
+        "nudity_score": 0.05,
+        "nudity_detected": false
+    },
+    "compliance_decision": {
+        "allow_auto_action": false,
+        "manual_review_required": true,
+        "reason": "Scores in ambiguous borderline ranges. Passing to Member 5 dashboard for review."
+    },
+    "narrative": "On 2026-04-05T05:31:20.005093, content published on dummy (Post: 7) was matched to user tanvi_v with 0.98 confidence. Risk level assessed as LOW. Manual review flagged. Reason: Scores in ambiguous borderline ranges. Passing to Member 5 dashboard for review."
+}

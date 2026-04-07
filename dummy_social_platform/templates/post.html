@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Post by {{ post.author.username }}{% endblock %}
+
+{% block content %}
+<div class="post-detail-container" style="padding: 16px; margin-bottom: 80px;">
+    <div class="post-card" style="margin: 0 auto; box-shadow: none; border: none; background: transparent;">
+        <!-- Header -->
+        <div class="post-header" style="display: flex; align-items: center; padding: 12px 0;">
+            <img class="post-user-img"
+                src="https://ui-avatars.com/api/?name={{ post.author.username }}&background=6366f1&color=fff"
+                alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 12px;">
+            <div class="post-user-info">
+                <div class="verified-badge" style="font-size: 10px; color: var(--primary); display: flex; align-items: center; gap: 4px;">
+                    <span>🛡️</span> 
+                    {% if post.author.username in ['ananya_v', 'priya_v', 'megha_v', 'sara_v', 'tanvi_v'] %}
+                    Identity Protected
+                    {% else %}
+                    Verified Human
+                    {% endif %}
+                </div>
+                <h4 style="margin: 0; color: white;">{{ post.author.username }}</h4>
+            </div>
+        </div>
+
+        {% if post.is_taken_down %}
+        <!-- Moderated Content -->
+        <div class="takedown-box" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 16px; padding: 32px 16px; text-align: center; margin: 12px 0;">
+            <div class="td-icon" style="font-size: 40px; margin-bottom: 16px;">🚫</div>
+            <div class="td-title" style="font-weight: 800; color: #fca5a5; font-size: 14px; letter-spacing: 1px; margin-bottom: 12px;">IDENTITY THREAT NEUTRALIZED</div>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">
+                This content violated the <b>Identity Link Forensic Policy</b>. 
+                Our AI matched the facial artifacts to a protected user and detected synthesis manipulation.
+            </p>
+            <div style="font-size: 11px; padding: 12px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center; gap: 12px;">
+                <span style="color: var(--primary);">Case: {{ post.taken_down_case_id or 'IDL-8829' }}</span>
+                <span style="color: var(--text-muted);">{{ post.taken_down_at }}</span>
+            </div>
+        </div>
+        {% else %}
+        <!-- Standard Post -->
+        {% if post.image_filename %}
+        <img class="post-media" src="{{ url_for('static', filename='uploads/' + post.image_filename) }}"
+            alt="Post image" style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: cover;">
+        {% endif %}
+
+        <div class="post-footer" style="padding: 16px 0;">
+            <div class="stats-row" style="display: flex; gap: 16px; margin-bottom: 12px; font-size: 18px;">
+                <div class="stat"><span>🤍</span> 12</div>
+                <div class="stat"><span>💬</span> 3</div>
+                <div class="stat"><span>🔗</span></div>
+            </div>
+            <div class="caption" style="font-size: 14px; line-height: 1.5;">
+                <b style="color: var(--primary); margin-right: 6px;">{{ post.author.username }}</b> {{ post.caption }}
+            </div>
+            <div style="margin-top: 12px; font-size: 11px; color: var(--text-muted);">
+                {{ post.created_at.strftime('%B %d, %Y') }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

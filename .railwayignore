@@ -1,0 +1,19 @@
+# Ignore local python environments
+venv/
+.env/
+env/
+
+# Ignore python's temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore hidden system files
+.DS_Store
+Thumbs.db
+.git/
+
+# Ignore local database files that will be recreated
+*.db
+!dummy_social_platform/dummy_platform.db # Keep this one if you want seeded data

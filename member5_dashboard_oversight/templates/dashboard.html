@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - Deepfake Oversight{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+{% block nav_alerts %}{% endblock %}
+
+{% block content %}
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-title">TOTAL SCANS <span>🔍</span></div>
+        <div class="kpi-value">{{ total_cases }}</div>
+        <div class="kpi-line">
+            <div class="kpi-line-inner blue" style="width: 100%;"></div>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">TAKEDOWNS <span>✔️</span></div>
+        <div class="kpi-value">{{ takedowns }}</div>
+        <div class="kpi-line" style="display:flex;gap:4px;background:transparent;">
+            <div style="background:var(--accent-green);flex:1;border-radius:2px;"></div>
+            <div style="background:var(--accent-green);flex:1;border-radius:2px;"></div>
+            <div style="background:var(--accent-green);flex:1;border-radius:2px;"></div>
+            <div style="background:var(--border-color);flex:1;border-radius:2px;"></div>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">PENDING REVIEW <span>⚠️</span></div>
+        <div class="kpi-value">{{ pending }}</div>
+        <div class="alert-badges">
+            <div class="ab h">P</div>
+            <div class="ab m">R</div>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">SYSTEM THREAT LEVEL <span>⚡</span></div>
+        {% if threat_level == 'CRITICAL' %}
+        <div class="kpi-value" style="font-size: 20px; color: var(--accent-red)">CRITICAL</div>
+        {% elif threat_level == 'ELEVATED' %}
+        <div class="kpi-value" style="font-size: 20px; color: var(--accent-orange)">ELEVATED</div>
+        {% else %}
+        <div class="kpi-value" style="font-size: 20px; color: var(--accent-green)">NORMAL</div>
+        {% endif %}
+        <div
+            style="margin-top:16px;display:flex;justify-content:space-between;font-size:10px;font-family:var(--font-mono);color:var(--text-muted);">
+            <span>MONITORING</span>
+            <span>ACTIVE</span>
+        </div>
+    </div>
+</div>
+
+<div class="main-grid">
+    <div class="chart-panel">
+        <div class="chart-header">
+            <div>
+                <h3>Detection Trends</h3>
+                <span>Historical performance across all nodes</span>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button
+                    style="background:#2d3240;color:white;border:none;padding:6px 12px;border-radius:6px;font-family:var(--font-mono);font-size:11px;">Last
+                    30 Days ⌄</button>
+                <button style="background:#2d3240;color:white;border:none;padding:6px;border-radius:6px;">📥</button>
+            </div>
+        </div>
+        <div class="chart-container">
+            <div id="detection-trends-chart"></div>
+        </div>
+        
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartData = {{ chart_data|tojson }};
+            const labels = [];
+            
+            // Generate labels for the last 15 days
+            const now = new Date();
+            for (let i = 14; i >= 0; i--) {
+                const date = new Date(now);
+                date.setDate(date.getDate() - i);
+                labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+            }
+
+            const options = {
+                series: [{
+                    name: 'Detections',
+                    data: chartData
+                }],
+                chart: {
+                    type: 'area',
+                    height: 250,
+                    toolbar: { show: false },
+                    zoom: { enabled: false },
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 800,
+                        animateGradually: {
+                            enabled: true,
+                            delay: 150
+                        },
+                        dynamicAnimation: {
+                            enabled: true,
+                            speed: 350
+                        }
+                    },
+                    background: 'transparent',
+                    sparkline: { enabled: false }
+                },
+                colors: ['#3b82f6'],
+                dataLabels: { enabled: false },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3,
+                    colors: ['#60a5fa']
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05,
+                        stops: [0, 100],
+                        colorStops: [
+                            { offset: 0, color: '#3b82f6', opacity: 0.4 },
+                            { offset: 100, color: '#3b82f6', opacity: 0 }
+                        ]
+                    }
+                },
+                markers: {
+                    size: 5,
+                    colors: ['#3b82f6'],
+                    strokeColors: '#fff',
+                    strokeWidth: 2,
+                    hover: { size: 7 }
+                },
+                xaxis: {
+                    categories: labels,
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    labels: {
+                        style: {
+                            colors: '#64748b',
+                            fontSize: '10px',
+                            fontFamily: 'JetBrains Mono'
+                        }
+                    }
+                },
+                yaxis: {
+                    show: true,
+                    labels: {
+                        style: {
+                            colors: '#64748b',
+                            fontSize: '10px',
+                            fontFamily: 'JetBrains Mono'
+                        }
+                    }
+                },
+                grid: {
+                    show: true,
+                    borderColor: 'rgba(59, 130, 246, 0.05)',
+                    strokeDashArray: 4,
+                    padding: { left: 10, right: 10 }
+                },
+                tooltip: {
+                    theme: 'dark',
+                    x: { show: true },
+                    y: {
+                        formatter: function(val) { return val + " detections" }
+                    },
+                    style: {
+                        fontSize: '12px',
+                        fontFamily: 'Inter'
+                    }
+                }
+            };
+
+            const chart = new ApexCharts(document.querySelector("#detection-trends-chart"), options);
+            chart.render();
+        });
+        </script>
+    </div>
+
+    <div class="alerts-panel">
+        <div class="panel-head">
+            <h3>Pending Alerts <span
+                    style="background:var(--accent-red);color:white;padding:2px 8px;border-radius:10px;font-size:12px;margin-left:8px;">{{
+                    pending }}</span></h3>
+            <span style="color:var(--text-muted);cursor:pointer;">•••</span>
+        </div>
+        <div class="alerts-list">
+            {% for log in pending_alerts %}
+            <div class="alert-box">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span class="alert-tag tag-orange">▲ PENDING REVIEW</span>
+                    <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">{{
+                        log.timestamp.strftime('%H:%M') }}</span>
+                </div>
+                <h4 class="alert-title">Case #{{ log.id[:8] }}</h4>
+                <p class="alert-desc">Platform: {{ log.platform or 'Unknown' }}<br>Source: {{ log.details.get('source', 'System') }}</p>
+                <div class="alert-act" style="margin-top:10px;">
+                    <form method="POST" action="{{ url_for('dashboard.approve_case', log_id=log.id) }}">
+                        <button type="submit" class="alert-btn orange">Approve</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">No pending alerts.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="activities-panel">
+    <div class="panel-head">
+        <h3>Recent Activities</h3>
+        <a href="#" style="color:var(--accent-light-blue);text-decoration:none;font-weight:600;font-size:12px;">View All
+            Logs</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>TIMESTAMP</th>
+                <th>CASE ID</th>
+                <th>ACTION</th>
+                <th>PLATFORM</th>
+                <th>STATUS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td class="td-time">{{ log.timestamp.strftime('%Y-%m-%d') }}<br />{{ log.timestamp.strftime('%H:%M:%S')
+                    }}</td>
+                <td><span class="user-badge" style="background:#2d3240;">#{{ log.id }}</span></td>
+                <td>{{ log.action_type }}</td>
+                <td>{{ log.platform or 'System' }}</td>
+                <td>
+                    {% if log.status == 'SUCCESS' %}
+                    <span class="status success">SUCCESS</span>
+                    {% elif log.status == 'PENDING_REVIEW' %}
+                    <span class="status progress">PENDING</span>
+                    {% else %}
+                    <span class="status">{{ log.status }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" style="text-align:center; padding: 24px; color: var(--text-muted);">No activity recorded
+                    yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

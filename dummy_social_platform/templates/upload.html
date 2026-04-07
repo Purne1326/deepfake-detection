@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block tabs %}{% endblock %}
+
+{% block content %}
+<div style="padding: 24px;">
+    <h2 style="font-size: 24px; margin-bottom:24px;">Upload Post</h2>
+    <form method="POST" action="" enctype="multipart/form-data">
+        <label
+            style="display:block;margin-bottom:8px;font-size:14px;color:var(--text-secondary);font-weight:600;">Select
+            Image</label>
+        <div
+            style="border: 2px dashed var(--border-color); border-radius:16px; padding:32px; text-align:center; margin-bottom:24px; color:var(--text-secondary); cursor:pointer;">
+            <div style="font-size:32px; margin-bottom:12px;">📸</div>
+            <input type="file" name="image" required style="width:100%;color:transparent;" accept="image/*">
+            <p style="font-size:13px;">Tap to browse files</p>
+        </div>
+
+        <label
+            style="display:block;margin-bottom:8px;font-size:14px;color:var(--text-secondary);font-weight:600;">Caption</label>
+        <textarea name="caption" rows="4"
+            style="width: 100%; background:var(--bg-card); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; color: white; margin-bottom: 24px;"
+            placeholder="Write a engaging caption..."></textarea>
+
+        <button type="submit"
+            style="width: 100%; background:var(--primary); color: white; border:none; padding:16px; border-radius:12px; font-weight:700; font-size:16px;">Publish
+            Post</button>
+    </form>
+</div>
+{% endblock %}

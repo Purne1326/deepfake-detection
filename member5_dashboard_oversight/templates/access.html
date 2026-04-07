@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Access Management - Deepfake Oversight{% endblock %}
+{% block nav_access %}active{% endblock %}
+
+{% block content %}
+<div class="main-grid" style="grid-template-columns: 2fr 1fr;">
+    <div class="activities-panel">
+        <div class="panel-head">
+            <h3>Protected Persons Registry</h3>
+        </div>
+        
+        <!-- Quick Enrollment Form -->
+        <div style="padding: 20px 24px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-color);">
+            <form method="POST" style="display:flex; gap: 12px; align-items: flex-end;">
+                <div style="flex:1;">
+                    <label style="font-size: 10px; color: var(--text-muted); display: block; margin-bottom: 6px;">FULL NAME</label>
+                    <input type="text" name="name" placeholder="Enrolling Individual..." style="width:100%; padding: 8px; background: var(--bg-main); border: 1px solid var(--border-color); color: white; border-radius: 4px;" required>
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size: 10px; color: var(--text-muted); display: block; margin-bottom: 6px;">SOCIAL HANDLE</label>
+                    <input type="text" name="handle" placeholder="@username" style="width:100%; padding: 8px; background: var(--bg-main); border: 1px solid var(--border-color); color: white; border-radius: 4px;" required>
+                </div>
+                <div>
+                    <label style="font-size: 10px; color: var(--text-muted); display: block; margin-bottom: 6px;">RISK</label>
+                    <select name="risk_level" style="padding: 8px; background: var(--bg-main); border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                        <option value="NORMAL">NORMAL</option>
+                        <option value="ELEVATED">ELEVATED</option>
+                        <option value="HIGH">HIGH RISK</option>
+                    </select>
+                </div>
+                <button type="submit" class="alert-btn orange">ENROLL IDENTITY</button>
+            </form>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Name</th>
+                    <th>Social Handle</th>
+                    <th>Protection Level</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in persons %}
+                <tr>
+                    <td><span style="color:var(--accent-green)">● ACTIVE</span></td>
+                    <td><strong>{{ person.name }}</strong></td>
+                    <td class="td-time">{{ person.handle }}</td>
+                    <td>
+                        <span class="status success" style="padding:2px 8px;font-size:9px;">{{ person.risk_level }}</span>
+                        <span class="status progress" style="padding:2px 8px;font-size:9px;">FAISS_SYNC</span>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('dashboard.remove_protection', person_id=person.id) }}">
+                             <button type="submit" style="background:transparent; border:none; color:var(--accent-red); cursor:pointer; font-size:12px;">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align:center; padding: 40px; color: var(--text-muted);">No persons under active monitoring.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="alerts-panel">
+        <div class="panel-head">
+            <h3>Security Team</h3>
+        </div>
+        <div class="alerts-list">
+            <!-- Purnendu Pal -->
+            <div class="alert-box">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="https://ui-avatars.com/api/?name=Purnendu+Pal&background=2563eb&color=fff&bold=true" style="width:32px;height:32px;border-radius:50%;">
+                    <div>
+                        <h4 style="margin:0;font-size:13px;">Purnendu Pal</h4>
+                        <span style="font-size:11px;color:var(--text-muted);">Lead Security Architect</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Himaghna Dhar -->
+            <div class="alert-box">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="https://ui-avatars.com/api/?name=Himaghna+Dhar&background=10b981&color=fff&bold=true" style="width:32px;height:32px;border-radius:50%;">
+                    <div>
+                        <h4 style="margin:0;font-size:13px;">Himaghna Dhar</h4>
+                        <span style="font-size:11px;color:var(--text-muted);">Senior Forensic Analyst</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Anushrita Dey -->
+            <div class="alert-box">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="https://ui-avatars.com/api/?name=Anushrita+Dey&background=f59e0b&color=fff&bold=true" style="width:32px;height:32px;border-radius:50%;">
+                    <div>
+                        <h4 style="margin:0;font-size:13px;">Anushrita Dey</h4>
+                        <span style="font-size:11px;color:var(--text-muted);">Compliance & Privacy Officer</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Srija Majumdar -->
+            <div class="alert-box">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="https://ui-avatars.com/api/?name=Srija+Majumdar&background=8b5cf6&color=fff&bold=true" style="width:32px;height:32px;border-radius:50%;">
+                    <div>
+                        <h4 style="margin:0;font-size:13px;">Srija Majumdar</h4>
+                        <span style="font-size:11px;color:var(--text-muted);">Content Moderation Lead</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Rishab Ganguly -->
+            <div class="alert-box">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="https://ui-avatars.com/api/?name=Rishab+Ganguly&background=ec4899&color=fff&bold=true" style="width:32px;height:32px;border-radius:50%;">
+                    <div>
+                        <h4 style="margin:0;font-size:13px;">Rishab Ganguly</h4>
+                        <span style="font-size:11px;color:var(--text-muted);">Detection Pipeline Engineer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

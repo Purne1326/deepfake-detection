@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Report Results{% endblock %}
+
+{% block hero %}
+    <h1>Identity Forensic Results</h1>
+    <p>Your report has been analyzed by our AI shield engine. If a high risk was detected, an official case will be opened for our security team to review.</p>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between; border-bottom: 2px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+            <h2 style="font-weight:800">Report Status</h2>
+            <div style="font-family:monospace; color:var(--text-muted); font-size: 0.8rem;">REPORT ID: {{ report_id }}</div>
+        </div>
+
+        <div class="result-card 
+            {% if results.overall_risk_level == 'high' %}risk-high
+            {% elif results.overall_risk_level == 'medium' %}risk-medium
+            {% else %}risk-none{% endif %}">
+            <div style="display:flex; align-items:flex-start; justify-content:space-between;">
+                <div>
+                   <h3 style="margin-bottom:0.5rem; font-weight:800;">
+                       Detected Risk: 
+                       <span class="status-badge 
+                           {% if results.overall_risk_level == 'high' %}status-high
+                           {% elif results.overall_risk_level == 'medium' %}status-medium
+                           {% else %}status-low{% endif %}">
+                           {{ results.overall_risk_level }}
+                       </span>
+                   </h3>
+                   <p style="font-size:0.95rem; line-height:1.6; color:var(--text-muted);">
+                       Our system has found markers of 
+                       {% if results.deepfake.score > 0.5 %}Deepfake Generation <strong>({{ (results.deepfake.score * 100)|round|int }}%)</strong>{% endif %}
+                       {% if results.nudity.detected %} and Unexpected Content <strong>(DETECTED)</strong>{% endif %}
+                       {% if not results.nudity.detected and results.deepfake.score <= 0.5 %}no significant manipulation markers{% endif %}.
+                   </p>
+                </div>
+                <div style="font-size: 3rem;">
+                    {% if results.overall_risk_level == 'high' %}🚨
+                    {% elif results.overall_risk_level == 'medium' %}⚠️
+                    {% else %}🛡️{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <h4 style="margin-bottom:1rem; font-weight:700;">What happens next?</h4>
+            <div style="padding:1rem; background: #f8fafc; border-radius: 0.5rem; font-size: 0.9rem; line-height:1.6; color:var(--text-muted);">
+                1. <strong>Verification:</strong> Our forensic team will verify this automated result.<br>
+                2. <strong>Legal Review:</strong> If confirmed, this file will be flagged for immediate takedown from public social media platforms.<br>
+                3. <strong>Contact:</strong> If we need more information, we will reach out to the contact email you provided.<br>
+                <strong>Thank you for helping protect your digital identity and our platform.</strong>
+            </div>
+        </div>
+
+        <div style="margin-top: 2.5rem; text-align: center;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary" style="padding: 0.75rem 3rem;">Return Home</a>
+        </div>
+    </div>
+{% endblock %}

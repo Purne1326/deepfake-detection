@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Audit Trail - Deepfake Oversight{% endblock %}
+{% block nav_audit %}active{% endblock %}
+
+{% block content %}
+<div class="main-grid" style="grid-template-columns: 1fr;">
+    <div class="activities-panel">
+        <div class="panel-head">
+            <h3>Full System Audit Trail</h3>
+            <div style="display:flex;gap:10px;">
+                <input type="text" placeholder="Filter by Case, Action or User..." style="background:var(--bg-main);border:1px solid var(--border-color);color:white;padding:6px 12px;border-radius:6px;font-size:12px;">
+                <button class="alert-btn" style="padding:6px 12px;">Export (.csv)</button>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Action Event</th>
+                    <th>Resource</th>
+                    <th>Status</th>
+                    <th>Hash Integrity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td class="td-time">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td><strong>{{ log.action_type }}</strong></td>
+                    <td>{{ log.platform or 'Internal System' }}:{{ log.post_id or 'ROOT' }}</td>
+                    <td>
+                        {% if log.status == 'SUCCESS' %}
+                        <span class="status success">SUCCESS</span>
+                        {% elif log.status == 'ERROR' %}
+                        <span class="status" style="border-color:var(--accent-red);color:var(--accent-red);">ERROR</span>
+                        {% else %}
+                        <span class="status progress">{{ log.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">SHA256:{{ log.id[:12] }}...</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted);">No activity logs.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

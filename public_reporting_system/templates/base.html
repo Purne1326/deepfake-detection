@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Digital Identity Protection{% endblock %} - Deepfake Shield</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/public.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="hero">
+        <div class="header-logo" style="margin-bottom: 2rem; font-weight: 800; font-size: 1.5rem; letter-spacing: -0.025em; display:flex; align-items:center; justify-content:center; gap: 8px;">
+            <span style="color: #60a5fa; font-size: 2rem;">🛡️</span> SHIELD SYSTEM
+        </div>
+        {% block hero %}{% endblock %}
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="card" style="margin-bottom:20px; border-left: 5px solid red; padding: 15px;">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Deepfake Shield System. Public Transparency & Safety Program.</p>
+        <p style="margin-top:0.5rem; font-size: 0.75rem;">This portal is for public identity protection reports only. Official forensic investigations are handled by authorized personnel.</p>
+    </footer>
+    
+    <script>
+        // Simple drag and drop simulation
+        const area = document.querySelector('.upload-area');
+        if(area) {
+            area.addEventListener('click', () => {
+                document.getElementById('file-input').click();
+            });
+            document.getElementById('file-input').addEventListener('change', (e) => {
+                if(e.target.files.length > 0) {
+                    area.innerHTML = `<i>📄</i><span style="font-weight:600">${e.target.files[0].name}</span><br><span style="font-size:0.8rem;color:var(--primary)">Click to change</span>`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

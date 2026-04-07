@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Reporting - Deepfake Oversight{% endblock %}
+{% block nav_reports %}active{% endblock %}
+
+{% block content %}
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-title">TOTAL ANALYSES</div>
+        <div class="kpi-value">{{ total_scans }}</div>
+        <div class="kpi-line"><div class="kpi-line-inner blue" style="width: 100%;"></div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">SUCCESSFUL TAKEDOWNS</div>
+        <div class="kpi-value">{{ total_takedowns }}</div>
+        <div class="kpi-line"><div class="kpi-line-inner blue" style="width: {{ (total_takedowns/total_scans * 100) if total_scans > 0 else 0 }}%; background:var(--accent-green);"></div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">AVG DETECTION ACCURACY</div>
+        <div class="kpi-value">98.4%</div>
+        <div class="kpi-line"><div class="kpi-line-inner blue" style="width: 98%; background:var(--accent-orange);"></div></div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-title">RESPONSE TIME (AVG)</div>
+        <div class="kpi-value">1.2s</div>
+        <div class="kpi-line"><div class="kpi-line-inner blue" style="width: 20%; background:var(--accent-blue);"></div></div>
+    </div>
+</div>
+
+<div class="main-grid">
+    <div class="chart-panel">
+        <div class="chart-header">
+            <h3>Detection Distribution</h3>
+            <span>Breakdown by Platform</span>
+        </div>
+        <div style="height:350px;display:flex;align-items:center;justify-content:center;position:relative;">
+             <div style="width:220px;height:220px;border-radius:50%;background: conic-gradient(var(--accent-blue) 0% 85%, var(--accent-orange) 85% 100%);position:relative;display:flex;align-items:center;justify-content:center;box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);">
+                <div style="width:160px;height:160px;border-radius:50%;background:var(--bg-card);display:flex;flex-direction:column;align-items:center;justify-content:center;backdrop-filter:blur(10px);border:1px solid var(--border-color);">
+                    <strong style="font-size:24px;font-family:var(--font-display);">85%</strong>
+                    <span style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);">Main Platform</span>
+                </div>
+             </div>
+             <div style="position:absolute;bottom:0;display:flex;gap:20px;font-size:11px;">
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;background:var(--accent-blue);border-radius:2px;"></div> Dummy Platform (85%)</div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;background:var(--accent-orange);border-radius:2px;"></div> External/Manual (15%)</div>
+             </div>
+        </div>
+    </div>
+    <div class="alerts-panel">
+         <div class="panel-head">
+            <h3>Download Reports</h3>
+        </div>
+        <div class="alerts-list">
+            <div class="alert-box">
+                <h4>Quarterly Forensic Audit</h4>
+                <a href="{{ url_for('dashboard.download_report', report_name='Quarterly Forensic Audit') }}" class="alert-btn" style="margin-top:10px;text-decoration:none;display:inline-block;">DOWNLOAD PDF</a>
+            </div>
+             <div class="alert-box">
+                <h4>Weekly Compliance Summary</h4>
+                <a href="{{ url_for('dashboard.download_report', report_name='Weekly Compliance Summary') }}" class="alert-btn" style="margin-top:10px;text-decoration:none;display:inline-block;">DOWNLOAD PDF</a>
+            </div>
+             <div class="alert-box">
+                <h4>Victim Impact Statistics</h4>
+                <a href="{{ url_for('dashboard.download_report', report_name='Victim Impact Statistics') }}" class="alert-btn" style="margin-top:10px;text-decoration:none;display:inline-block;">DOWNLOAD PDF</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{
+    "case_id": "ccd6dc9d-71a6-41bd-ba41-6b7a7f724d48",
+    "timestamp": "2026-04-07T06:58:25.923184",
+    "platform": "dummy",
+    "post_id": 1,
+    "post_url": "/static/uploads/demo_1.jpg",
+    "victim_user_id": "ananya_v",
+    "match_confidence": 0.98,
+    "analysis": {
+        "risk_level": "low",
+        "deepfake_score": 0.1,
+        "deepfake_confidence": 0.94,
+        "nudity_score": 0.05,
+        "nudity_detected": false
+    },
+    "compliance_decision": {
+        "allow_auto_action": false,
+        "manual_review_required": true,
+        "reason": "Scores in ambiguous borderline ranges. Passing to Member 5 dashboard for review."
+    },
+    "narrative": "On 2026-04-07T06:58:25.923184, content published on dummy (Post: 1) was matched to user ananya_v with 0.98 confidence. Risk level assessed as LOW. Manual review flagged. Reason: Scores in ambiguous borderline ranges. Passing to Member 5 dashboard for review."
+}

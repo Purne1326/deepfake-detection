@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Cases List - Deepfake Oversight{% endblock %}
+{% block nav_cases %}active{% endblock %}
+
+{% block content %}
+<div class="main-grid" style="grid-template-columns: 1fr;">
+    <div class="activities-panel">
+        <div class="panel-head">
+            <h3>Registered Detection Cases</h3>
+            <span style="color:var(--text-muted);font-size:12px;">Timeline of all flagged content</span>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Detected At</th>
+                    <th>Case ID</th>
+                    <th>Victim Target</th>
+                    <th>Platform</th>
+                    <th>Risk Score</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for case in cases %}
+                <tr>
+                    <td class="td-time">{{ case.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td><span class="user-badge">#{{ case.id[:8] }}...</span></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="width:24px;height:24px;border-radius:50%;background:var(--accent-blue);display:flex;align-items:center;justify-content:center;font-size:10px;">👤</div>
+                            {{ case.details.victim_user_id }}
+                        </div>
+                    </td>
+                    <td>{{ case.platform }}</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:4px;">
+                            <div style="flex:1;height:4px;background:var(--border-color);border-radius:2px;overflow:hidden;">
+                                <div style="width:{{ (case.details.match_confidence * 100)|int }}%;height:100%;background:var(--accent-red);"></div>
+                            </div>
+                            <span style="font-size:10px;font-family:var(--font-mono);">{{ "%.0f"|format((case.details.match_confidence or 0) * 100) }}%</span>
+                        </div>
+                    </td>
+                    <td><span class="status progress">{{ case.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted);">No cases found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

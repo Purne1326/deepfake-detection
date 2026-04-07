@@ -1,0 +1,22 @@
+{
+    "case_id": "f3f4d12f-35c0-465e-ad24-f4cf0f487b1b",
+    "timestamp": "2026-03-21T16:17:46.312033",
+    "platform": "dummy",
+    "post_id": 1,
+    "post_url": "/static/uploads/real_profile.jpg",
+    "victim_user_id": "user123",
+    "match_confidence": 5.120000076293939,
+    "analysis": {
+        "risk_level": "high",
+        "deepfake_score": 0.9602311092297191,
+        "deepfake_confidence": 0.839707570382875,
+        "nudity_score": 0.6415250617476527,
+        "nudity_detected": false
+    },
+    "compliance_decision": {
+        "allow_auto_action": true,
+        "manual_review_required": false,
+        "reason": "Confidence and detection scores exceed thresholds for automatic takedowns."
+    },
+    "narrative": "On 2026-03-21T16:17:46.312033, content published on dummy (Post: 1) was matched to user user123 with 5.12 confidence. Risk level assessed as HIGH. Automatic takedown thresholds were met and action initiated."
+}

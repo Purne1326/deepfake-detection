@@ -1,0 +1,22 @@
+{
+    "case_id": "845b5f94-f04f-42bb-85f7-a9491c24b821",
+    "timestamp": "2026-04-04T14:30:41.286522",
+    "platform": "dummy",
+    "post_id": 3,
+    "post_url": "/static/uploads/demo_3.jpg",
+    "victim_user_id": "megha_v",
+    "match_confidence": 0.98,
+    "analysis": {
+        "risk_level": "critical",
+        "deepfake_score": 0.9535989551923629,
+        "deepfake_confidence": 0.9282261588315707,
+        "nudity_score": 0.8273920689470168,
+        "nudity_detected": true
+    },
+    "compliance_decision": {
+        "allow_auto_action": true,
+        "manual_review_required": false,
+        "reason": "Confidence and detection scores exceed thresholds for automatic takedowns."
+    },
+    "narrative": "On 2026-04-04T14:30:41.286522, content published on dummy (Post: 3) was matched to user megha_v with 0.98 confidence. Risk level assessed as CRITICAL. Automatic takedown thresholds were met and action initiated."
+}

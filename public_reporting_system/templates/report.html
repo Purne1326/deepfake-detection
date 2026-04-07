@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Start Protection Report{% endblock %}
+
+{% block hero %}
+    <h1>Initiate Identity Misuse Report</h1>
+    <p>Please provide details about the image you're reporting. This information will be used to verify the report and coordinate with legal teams if necessary.</p>
+{% endblock %}
+
+{% block content %}
+    <form class="card" method="POST" enctype="multipart/form-data" action="{{ url_for('report') }}">
+        <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+            <label for="email">Contact Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="name@example.com">
+        </div>
+        <div class="form-group">
+            <label for="description">Detailed Description of Misuse</label>
+            <textarea id="description" name="description" rows="4" placeholder="How is this image being used without your consent?"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>Image Upload <span style="color:var(--accent-red)">*</span></label>
+            <div class="upload-area">
+                <i style="color:var(--primary); font-size:32px; margin-bottom:12px;">📤</i>
+                <div><span style="font-weight:600">Drop your file here</span> or <span style="color:var(--primary)">click to browse</span></div>
+                <div style="font-size: 0.8rem; color:var(--text-muted); margin-top: 5px;">Supports: JPG, PNG, WEBP (Max 16MB)</div>
+                <input type="file" id="file-input" name="file" style="display:none" accept="image/*" required>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+            <a href="{{ url_for('index') }}" class="btn" style="margin-right: 1rem;">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2.5rem;">Submit Report</button>
+        </div>
+    </form>
+
+    <script>
+        // Simple drag and drop logic
+        const area = document.querySelector('.upload-area');
+        const fileInput = document.getElementById('file-input');
+        
+        area.onclick = () => fileInput.click();
+        
+        fileInput.onchange = (e) => {
+            if(fileInput.files.length > 0) {
+                area.innerHTML = `<div style="font-size:32px; margin-bottom: 12px;">✅</div><div style="font-weight:600">${fileInput.files[0].name}</div><div style="color:var(--primary); font-size: 0.8rem; margin-top:5px;">Click to replace</div>`;
+            }
+        };
+
+        area.ondragover = (e) => {
+            e.preventDefault();
+            area.style.borderColor = "var(--primary)";
+            area.style.background = "rgba(37, 99, 235, 0.05)";
+        };
+
+        area.ondragleave = () => {
+            area.style.borderColor = "var(--border)";
+            area.style.background = "#fdfdfd";
+        };
+
+        area.ondrop = (e) => {
+            e.preventDefault();
+            fileInput.files = e.dataTransfer.files;
+            fileInput.dispatchEvent(new Event('change'));
+        };
+    </script>
+{% endblock %}

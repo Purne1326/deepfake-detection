@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Post Detail - Dummy Social{% endblock %}
+
+{% block content %}
+<div class="post-detail-container">
+    <div class="post-card detail-card {% if post.is_taken_down %}taken-down{% endif %}">
+        <div class="post-header">
+            <a href="{{ url_for('feed.profile', username=post.author.username) }}" class="post-username">{{
+                post.author.username }}</a>
+            <span class="post-time">{{ post.created_at.strftime('%B %d, %Y at %I:%M %p') }}</span>
+        </div>
+
+        <div class="post-image-container">
+            {% if post.is_taken_down %}
+            <div class="takedown-notice large-notice">
+                <span class="notice-icon">⚠️</span>
+                <h2>Content Removed</h2>
+                <p>This post has been removed for violating community guidelines.</p>
+                <p class="takedown-reason">Reason: {{ post.taken_down_reason }}</p>
+                <span class="takedown-time">Removed on: {{ post.taken_down_at.strftime('%Y-%m-%d %H:%M') }}</span>
+            </div>
+            {% else %}
+            <img class="post-img img-detail" src="{{ url_for('static', filename='uploads/' + post.image_filename) }}"
+                alt="Post image">
+            {% endif %}
+        </div>
+
+        <div class="post-footer">
+            <p class="post-caption"><span class="post-username">{{ post.author.username }}</span> {{ post.caption }}</p>
+            <p class="post-id-tag">Post ID: {{ post.id }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

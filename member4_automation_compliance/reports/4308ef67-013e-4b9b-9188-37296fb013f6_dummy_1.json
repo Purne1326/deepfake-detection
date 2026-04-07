@@ -1,0 +1,22 @@
+{
+    "case_id": "4308ef67-013e-4b9b-9188-37296fb013f6",
+    "timestamp": "2026-04-04T14:30:37.068876",
+    "platform": "dummy",
+    "post_id": 1,
+    "post_url": "/static/uploads/demo_1.jpg",
+    "victim_user_id": "ananya_v",
+    "match_confidence": 0.98,
+    "analysis": {
+        "risk_level": "critical",
+        "deepfake_score": 0.9287302559713725,
+        "deepfake_confidence": 0.9260261469967583,
+        "nudity_score": 0.766402485652211,
+        "nudity_detected": true
+    },
+    "compliance_decision": {
+        "allow_auto_action": true,
+        "manual_review_required": false,
+        "reason": "Confidence and detection scores exceed thresholds for automatic takedowns."
+    },
+    "narrative": "On 2026-04-04T14:30:37.068876, content published on dummy (Post: 1) was matched to user ananya_v with 0.98 confidence. Risk level assessed as CRITICAL. Automatic takedown thresholds were met and action initiated."
+}

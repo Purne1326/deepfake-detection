@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Active Alerts - Deepfake Oversight{% endblock %}
+{% block page_title %}Active High-Priority Alerts{% endblock %}
+{% block nav_alerts %}active{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="main-panel" style="grid-column: span 12;">
+        <div class="panel-header">
+            <div class="panel-title">⚠️ Pending Review Operations</div>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Received At</th>
+                    <th>Case ID</th>
+                    <th>Alert Type</th>
+                    <th>Original Platform</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alert in alerts %}
+                <tr>
+                    <td class="cell-mono">{{ alert.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td class="cell-mono" style="color: var(--warning-orange);">#{{ alert.id }}</td>
+                    <td>{{ alert.action_type }}</td>
+                    <td>{{ alert.platform or 'Unknown' }}</td>
+                    <td>
+                        <span class="status-badge status-pending">PENDING_REVIEW</span>
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('dashboard.approve_case', log_id=alert.id) }}"
+                            style="display:inline;">
+                            <button type="submit" class="alert-action"
+                                style="margin: 0; padding: 4px 8px; font-size: 0.75rem;">Approve Takedown</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 40px;">
+                        <div style="font-size: 2rem; margin-bottom: 12px; opacity: 0.5;">✅</div>
+                        No Active Alerts. All cases have been reviewed.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

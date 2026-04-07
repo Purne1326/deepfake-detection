@@ -1,0 +1,22 @@
+{
+    "case_id": "d0f287cc-d1bf-4254-945c-7330a62609a9",
+    "timestamp": "2026-03-21T16:17:48.423192",
+    "platform": "dummy",
+    "post_id": 2,
+    "post_url": "/static/uploads/deepfake_scam_01.jpg",
+    "victim_user_id": "user123",
+    "match_confidence": 5.120000076293939,
+    "analysis": {
+        "risk_level": "critical",
+        "deepfake_score": 0.9634895548501747,
+        "deepfake_confidence": 0.9830193740744481,
+        "nudity_score": 0.8623796028402853,
+        "nudity_detected": true
+    },
+    "compliance_decision": {
+        "allow_auto_action": true,
+        "manual_review_required": false,
+        "reason": "Confidence and detection scores exceed thresholds for automatic takedowns."
+    },
+    "narrative": "On 2026-03-21T16:17:48.423192, content published on dummy (Post: 2) was matched to user user123 with 5.12 confidence. Risk level assessed as CRITICAL. Automatic takedown thresholds were met and action initiated."
+}

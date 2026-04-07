@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}DummySocial{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="mobile-wrapper">
+        <header class="header">
+            <a href="{{ url_for('feed.feed') }}" class="brand">Identity Link</a>
+            <div class="header-actions">
+                <a href="{{ url_for('feed.explore') }}" style="text-decoration: none; color: inherit;">🔍</a>
+                <a href="{{ url_for('feed.profile', username=session.get('username') or 'ananya_v') }}" style="text-decoration: none; color: inherit;">👤</a>
+            </div>
+        </header>
+
+        {% block tabs %}
+        <div class="tabs">
+            <div class="tab {% if active_page == 'feed' %}active{% endif %}">Safety Feed</div>
+            <div class="tab">Verified Users</div>
+            <div class="tab">Alerts</div>
+        </div>
+        {% endblock %}
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="{{ url_for('feed.feed') }}" class="nav-btn {% if active_page == 'feed' %}active{% endif %}">
+                <span class="nav-icon">🏠</span>
+                Feed
+            </a>
+            <a href="{{ url_for('feed.explore') }}" class="nav-btn {% if active_page == 'explore' %}active{% endif %}">
+                <span class="nav-icon">🧭</span>
+                Explore
+            </a>
+            <a href="{{ url_for('post.upload') }}" class="nav-btn" style="text-decoration:none;">
+                <div class="nav-add">+</div>
+                Upload
+            </a>
+            <a href="{% if session.get('user_id') %}{{ url_for('feed.profile', username=session.get('username')) }}{% else %}{{ url_for('auth.login') }}{% endif %}"
+                class="nav-btn {% if active_page == 'profile' %}active{% endif %}">
+                <span class="nav-icon">👤</span>
+                Profile
+            </a>
+        </nav>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+{
+    "case_id": "ecf27369-08fe-40e8-8372-8e2fce9421ab",
+    "timestamp": "2026-03-21T16:17:50.546163",
+    "platform": "dummy",
+    "post_id": 3,
+    "post_url": "/static/uploads/malicious_content_02.jpg",
+    "victim_user_id": "user123",
+    "match_confidence": 5.120000076293939,
+    "analysis": {
+        "risk_level": "medium",
+        "deepfake_score": 0.8496906679927236,
+        "deepfake_confidence": 0.8993457153063633,
+        "nudity_score": 0.13106710927420379,
+        "nudity_detected": false
+    },
+    "compliance_decision": {
+        "allow_auto_action": false,
+        "manual_review_required": true,
+        "reason": "Scores in ambiguous borderline ranges. Passing to Member 5 dashboard for review."
+    },
+    "narrative": "On 2026-03-21T16:17:50.546163, content published on dummy (Post: 3) was matched to user user123 with 5.12 confidence. Risk level assessed as MEDIUM. Manual review flagged. Reason: Scores in ambiguous borderline ranges. Passing to Member 5 dashboard for review."
+}

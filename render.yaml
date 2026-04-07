@@ -1,0 +1,70 @@
+services:
+  # 1. Deepfake Dashboard Oversight
+  - type: web
+    name: deepfake-dashboard
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn member5_dashboard_oversight.app:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.12
+
+  # 2. Dummy Social Platform
+  - type: web
+    name: dummy-social-platform
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn dummy_social_platform.app:app
+    envVars:
+      - key: DUMMY_DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.12
+
+  # 3. Public Reporting System
+  - type: web
+    name: public-reporting-system
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn public_reporting_system.app:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.12
+
+  # 4. Orchestrator (Background Worker)
+  - type: worker
+    name: detection-orchestrator
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python scripts/orchestrator.py
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deepfake-db
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: 3.10.12
+
+databases:
+  - name: deepfake-db
+    plan: free

@@ -1,0 +1,22 @@
+{
+    "case_id": "c84ca754-3f47-4c02-85c0-6b5a1b65700a",
+    "timestamp": "2026-04-05T05:31:19.978023",
+    "platform": "dummy",
+    "post_id": 6,
+    "post_url": "/static/uploads/demo_6.jpg",
+    "victim_user_id": "sara_v",
+    "match_confidence": 0.98,
+    "analysis": {
+        "risk_level": "low",
+        "deepfake_score": 0.1,
+        "deepfake_confidence": 0.94,
+        "nudity_score": 0.05,
+        "nudity_detected": false
+    },
+    "compliance_decision": {
+        "allow_auto_action": false,
+        "manual_review_required": true,
+        "reason": "Scores in ambiguous borderline ranges. Passing to Member 5 dashboard for review."
+    },
+    "narrative": "On 2026-04-05T05:31:19.978023, content published on dummy (Post: 6) was matched to user sara_v with 0.98 confidence. Risk level assessed as LOW. Manual review flagged. Reason: Scores in ambiguous borderline ranges. Passing to Member 5 dashboard for review."
+}
