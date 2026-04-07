@@ -12,7 +12,7 @@ services:
           name: deepfake-db
           property: connectionString
       - key: DUMMY_PLATFORM_URL
-        value: http://dummy-social-platform  # Connects dashboard to the social media service internally
+        value: http://dummy-social-platform
       - key: SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
@@ -24,7 +24,8 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn dummy_social_platform.app:app --bind 0.0.0.0:$PORT
+    # Added smart_seed here too so you can login immediately
+    startCommand: PYTHONPATH=. python scripts/smart_seed.py && PYTHONPATH=. gunicorn dummy_social_platform.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DUMMY_DATABASE_URL
         fromDatabase:
@@ -45,7 +46,8 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn public_reporting_system.app:app --bind 0.0.0.0:$PORT
+    # Added smart_seed here too to be safe
+    startCommand: PYTHONPATH=. python scripts/smart_seed.py && PYTHONPATH=. gunicorn public_reporting_system.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
