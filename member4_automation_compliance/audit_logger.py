@@ -30,6 +30,11 @@ class AuditLogger:
     def __init__(self, db_url=None):
         if db_url is None:
             db_url = os.environ.get("DATABASE_URL", "sqlite:///audit.db")
+            
+        # Fix for Render: SQLAlchemy requires 'postgresql://' but Render provides 'postgres://'
+        if db_url and db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
+            
         self.engine = create_engine(db_url)
         Base.metadata.create_all(self.engine)
         Session = sessionmaker(bind=self.engine)

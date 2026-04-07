@@ -15,6 +15,11 @@ bp = Blueprint('dashboard', __name__)
 
 def get_session():
     db_url = os.environ.get("DATABASE_URL", "sqlite:///audit.db") # Matches Member 4
+    
+    # Fix for Render: SQLAlchemy requires 'postgresql://' but Render provides 'postgres://'
+    if db_url and db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+        
     engine = create_engine(db_url)
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
