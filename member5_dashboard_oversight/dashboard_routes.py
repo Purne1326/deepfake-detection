@@ -109,8 +109,20 @@ def alerts():
 @login_required
 def cases():
     session = get_session()
-    all_cases = session.query(AuditLog).filter_by(action_type='DETECTION_RECEIVED').order_by(AuditLog.timestamp.desc()).all()
-    return render_template('cases.html', cases=all_cases)
+    all_logs = session.query(AuditLog).filter_by(action_type='DETECTION_RECEIVED').order_by(AuditLog.timestamp.desc()).all()
+    
+    # Safely parse JSON details for every log to ensure templates can access them
+    for log in all_logs:
+        if isinstance(log.details, str):
+            try:
+                import json
+                log.details = json.loads(log.details)
+            except:
+                log.details = {}
+        elif log.details is None:
+            log.details = {}
+            
+    return render_template('cases.html', cases=all_logs)
 
 from member4_automation_compliance.audit_logger import AuditLog, ProtectedPerson, Base, create_engine, sessionmaker
 import uuid
