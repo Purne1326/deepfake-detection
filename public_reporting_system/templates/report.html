@@ -26,10 +26,10 @@
             <label>Image Upload <span style="color:var(--accent-red)">*</span></label>
             <div class="upload-area">
                 <i style="color:var(--primary); font-size:32px; margin-bottom:12px;">📤</i>
-                <div><span style="font-weight:600">Drop your file here</span> or <span style="color:var(--primary)">click to browse</span></div>
+                <div id="upload-status"><span style="font-weight:600">Drop your file here</span> or <span style="color:var(--primary)">click to browse</span></div>
                 <div style="font-size: 0.8rem; color:var(--text-muted); margin-top: 5px;">Supports: JPG, PNG, WEBP (Max 16MB)</div>
-                <input type="file" id="file-input" name="file" style="display:none" accept="image/*" required>
             </div>
+            <input type="file" id="file-input" name="file" style="display:none" accept="image/*" required>
         </div>
 
         <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
@@ -47,7 +47,7 @@
         
         fileInput.onchange = (e) => {
             if(fileInput.files.length > 0) {
-                area.innerHTML = `<div style="font-size:32px; margin-bottom: 12px;">✅</div><div style="font-weight:600">${fileInput.files[0].name}</div><div style="color:var(--primary); font-size: 0.8rem; margin-top:5px;">Click to replace</div>`;
+                document.getElementById('upload-status').innerHTML = `<div style="font-size:32px; margin-bottom: 12px;">✅</div><div style="font-weight:600">${fileInput.files[0].name}</div><div style="color:var(--primary); font-size: 0.8rem; margin-top:5px;">Click to replace</div>`;
             }
         };
 
