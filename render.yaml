@@ -5,13 +5,14 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    # Now it automatically seeds ONLY if the database is empty before starting!
     startCommand: PYTHONPATH=. python scripts/smart_seed.py && PYTHONPATH=. python scripts/orchestrator.py & gunicorn member5_dashboard_oversight.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: deepfake-db
           property: connectionString
+      - key: DUMMY_PLATFORM_URL
+        value: http://dummy-social-platform  # Connects dashboard to the social media service internally
       - key: SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
@@ -23,7 +24,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: PYTHONPATH=. gunicorn dummy_social_platform.app:app --bind 0.0.0.0:$PORT
+    startCommand: gunicorn dummy_social_platform.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DUMMY_DATABASE_URL
         fromDatabase:
@@ -44,7 +45,7 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: PYTHONPATH=. gunicorn public_reporting_system.app:app --bind 0.0.0.0:$PORT
+    startCommand: gunicorn public_reporting_system.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:

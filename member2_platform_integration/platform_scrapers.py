@@ -2,9 +2,13 @@ import requests
 import json
 from typing import List, Dict, Any
 
+import os
+
 class DummyPlatformScraper:
-    def __init__(self, platform_url="http://localhost:5001"):
-        self.platform_url = platform_url
+    def __init__(self, platform_url=None):
+        # Default to localhost if no ENV is set (for local dev)
+        # Use DUMMY_PLATFORM_URL if in the cloud (Render)
+        self.platform_url = platform_url or os.environ.get("DUMMY_PLATFORM_URL", "http://localhost:5001")
         self.api_endpoint = f"{self.platform_url}/api/posts"
 
     def fetch_new_posts(self) -> List[Dict[str, Any]]:
