@@ -1,5 +1,7 @@
 from flask import Flask
 from member5_dashboard_oversight.dashboard_routes import bp as dashboard_bp
+import threading
+import time
 
 app = Flask(__name__)
 app.secret_key = 'super-secret-key' # Required for flask-login or sessions if used
@@ -28,6 +30,18 @@ def load_user(user_id):
 def mock_login():
     from flask_login import login_user
     login_user(MockUser('admin'))
+
+def start_orchestrator():
+    """Runs the orchestrator in a background thread for free deployment."""
+    from scripts.orchestrator import run_pipeline
+    time.sleep(10) # Give time for web servers to start
+    try:
+        run_pipeline()
+    except Exception as e:
+        print(f"Background Orchestrator Error: {e}")
+
+# Start orchestrator thread
+threading.Thread(target=start_orchestrator, daemon=True).start()
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
