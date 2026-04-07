@@ -5,7 +5,8 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: PYTHONPATH=. python scripts/orchestrator.py & gunicorn member5_dashboard_oversight.app:app --bind 0.0.0.0:$PORT
+    # Now it automatically seeds ONLY if the database is empty before starting!
+    startCommand: PYTHONPATH=. python scripts/smart_seed.py && PYTHONPATH=. python scripts/orchestrator.py & gunicorn member5_dashboard_oversight.app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
