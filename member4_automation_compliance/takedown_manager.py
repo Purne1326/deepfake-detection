@@ -1,6 +1,6 @@
 from .compliance_checker import ComplianceChecker
 from .reporting_engine import ReportingEngine
-from .audit_logger import AuditLogger
+from .audit_logger import AuditLogger, AuditLog
 from .platform_handlers.dummy_takedown import DummyTakedownHandler
 import traceback
 
@@ -88,7 +88,7 @@ class TakedownManager:
         """
         try:
             # 1. Fetch log from auditor
-            log = self.auditor.session.query(self.auditor.AuditLog).filter_by(id=log_id).first()
+            log = self.auditor.session.query(AuditLog).filter_by(id=log_id).first()
             if not log:
                 return {"status": "ERROR", "message": "Log entry not found"}
             
