@@ -178,7 +178,22 @@
                 </div>
             </header>
 
-            <div class="content-body">
+            <div class="content-body" style="padding: 24px; position: relative;">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="flash-message" style="margin-bottom: 20px; padding: 12px 20px; border-radius: 12px; font-size: 14px; display: flex; align-items: center; gap: 12px; 
+                        {% if category == 'success' %}
+                          background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981;
+                        {% else %}
+                          background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;
+                        {% endif %}">
+                        <span style="font-size: 18px;">{{ '✔️' if category == 'success' else '⚠️' }}</span>
+                        {{ message }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
                 {% block content %}{% endblock %}
             </div>
         </main>

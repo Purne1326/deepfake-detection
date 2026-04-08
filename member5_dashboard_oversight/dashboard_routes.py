@@ -248,6 +248,8 @@ def download_report(report_name):
         headers={"Content-disposition": f"attachment; filename={report_name.lower().replace(' ', '_')}.txt"}
     )
 
+from flask import redirect, url_for, flash
+
 @bp.route('/approve-case/<log_id>', methods=['POST'])
 @login_required
 def approve_case(log_id):
@@ -255,5 +257,9 @@ def approve_case(log_id):
     manager = TakedownManager()
     result = manager.approve_manual_case(log_id)
     
-    from flask import redirect, url_for
+    if result.get("status") == "SUCCESS":
+        flash(f"Successfully processed approval for case #{log_id[:8]}", "success")
+    else:
+        flash(f"Error during approval: {result.get('message', 'Unknown Error')}", "error")
+        
     return redirect(url_for('dashboard.index'))

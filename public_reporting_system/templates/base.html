@@ -34,19 +34,6 @@
         <p style="margin-top:0.5rem; font-size: 0.75rem;">This portal is for public identity protection reports only. Official forensic investigations are handled by authorized personnel.</p>
     </footer>
     
-    <script>
-        // Simple drag and drop simulation
-        const area = document.querySelector('.upload-area');
-        if(area) {
-            area.addEventListener('click', () => {
-                document.getElementById('file-input').click();
-            });
-            document.getElementById('file-input').addEventListener('change', (e) => {
-                if(e.target.files.length > 0) {
-                    area.innerHTML = `<i>📄</i><span style="font-weight:600">${e.target.files[0].name}</span><br><span style="font-size:0.8rem;color:var(--primary)">Click to change</span>`;
-                }
-            });
-        }
-    </script>
+
 </body>
 </html>

@@ -11,7 +11,10 @@ class TakedownManager:
         self.reporting = ReportingEngine()
         self.auditor = AuditLogger()
         self.handlers = {
-            "dummy": DummyTakedownHandler()
+            "dummy": DummyTakedownHandler(),
+            "public_submission": DummyTakedownHandler(), # Fallback for demo
+            "local_upload": DummyTakedownHandler(),      # Fallback for demo
+            "system": DummyTakedownHandler()             # Fallback for demo
         }
 
     def process_case(self, case_payload: dict, detection_results: dict) -> dict:
@@ -98,20 +101,27 @@ class TakedownManager:
             if not handler:
                 return {"status": "ERROR", "message": f"No handler registered for platform '{platform}'"}
 
-            # 2. Execute Takedown
+            # 2. Execute Takedown or Process Internally
             print(f"Manager: MANUAL APPROVAL received. Firing takedown for {platform}:{log.post_id}.")
-            packet = log.details # Reuse stored packet
             
-            handler_response = handler.report_post(
-                post_id=log.post_id,
-                url=log.url,
-                reason=f"Manually Approved: {log.reason}",
-                evidence=packet
-            )
+            # For internal platforms, we don't necessarily need a remote platform takedown
+            if platform in ['public_submission', 'local_upload', 'system']:
+                handler_response = {
+                    "status": "SUCCESS",
+                    "message": f"Case verified and internal record updated for {platform}."
+                }
+            else:
+                packet = log.details # Reuse stored packet
+                handler_response = handler.report_post(
+                    post_id=log.post_id,
+                    url=log.url,
+                    reason=f"Manually Approved: {log.reason}",
+                    evidence=packet
+                )
             
             # 3. Update Log Entry
             log.status = handler_response.get("status")
-            log.action_type = "TAKEDOWN_REQUESTED"
+            log.action_type = "TAKEDOWN_REQUESTED" if platform not in ['public_submission', 'local_upload'] else "VERIFIED"
             log.details = {**log.details, "manual_approval": True, "handler_response": handler_response}
             self.auditor.session.commit()
             
